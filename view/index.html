@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torre de Hanoi - Análisis Matemático</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Panel de Control Superior -->
+        <div class="control-panel">
+            <div class="controls-left">
+                <button id="resetBtn" class="btn btn-secondary">Reset</button>
+                <div class="disk-selector">
+                    <label for="diskSlider">Discos:</label>
+                    <input type="range" id="diskSlider" min="3" max="12" value="5" class="slider">
+                    <span id="diskCount">5</span>
+                </div>
+            </div>
+            
+            <div class="score-panel">
+                <div class="score-item">
+                    <span id="currentMoves" class="score-number">0</span>
+                    <span class="score-label">movimientos</span>
+                </div>
+                <div class="score-item best">
+                    <span class="score-label">Mejor:</span>
+                    <span id="bestScore" class="score-number">31</span>
+                    <span class="score-label">movimientos</span>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Panel de Información Matemática -->
+        <div class="math-panel">
+            <div class="formula-display">
+                <h3>📊 Análisis Matemático</h3>
+                <div class="formula-section">
+                    <div class="formula-item">
+                        <span class="formula-label">Recurrencia:</span>
+                        <span class="formula-text">T(n) = 2 · T(n-1) + 1, T(1) = 1</span>
+                    </div>
+                    <div class="formula-item">
+                        <span class="formula-label">Forma Cerrada:</span>
+                        <span class="formula-text" id="closedForm">T(5) = 2⁵ - 1 = 31</span>
+                    </div>
+                    <div class="formula-item">
+                        <span class="formula-label">Eficiencia:</span>
+                        <span class="formula-text" id="efficiency">100%</span>
+                    </div>
+                    <div class="formula-item">
+                        <span class="formula-label">Dificultad:</span>
+                        <span class="formula-text" id="difficultyLevel">Intermedio</span>
+                    </div>
+                </div>
+                <div class="difficulty-info">
+                    <small>💡 <strong>Niveles:</strong> 3-4 discos (Principiante), 5-6 discos (Intermedio), 7-8 discos (Avanzado), 9-10 discos (Experto), 11-12 discos (Maestro)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de Juego -->
+        <div class="game-area">
+            <!-- Torre Izquierda (Origen) -->
+            <div class="tower-container">
+                <div class="tower-base"></div>
+                <div class="tower-pole"></div>
+                <div class="tower-disks" id="tower0">
+                    <!-- Los discos se generarán dinámicamente -->
+                </div>
+                <div class="tower-label">Torre 1</div>
+            </div>
+
+            <!-- Torre Central (Auxiliar) -->
+            <div class="tower-container">
+                <div class="tower-base"></div>
+                <div class="tower-pole"></div>
+                <div class="tower-disks" id="tower1">
+                    <!-- Los discos se generarán dinámicamente -->
+                </div>
+                <div class="tower-label">Torre 2</div>
+            </div>
+
+            <!-- Torre Derecha (Destino) -->
+            <div class="tower-container">
+                <div class="tower-base"></div>
+                <div class="tower-pole"></div>
+                <div class="tower-disks" id="tower2">
+                    <!-- Los discos se generarán dinámicamente -->
+                </div>
+                <div class="tower-label">Torre 3</div>
+            </div>
+        </div>
+
+        <!-- Panel de Controles de Juego -->
+        <div class="game-controls">
+            <div class="move-controls">
+                <h4>Realizar Movimiento</h4>
+                <div class="move-inputs">
+                    <select id="fromTower" class="move-select">
+                        <option value="0">Torre 1</option>
+                        <option value="1">Torre 2</option>
+                        <option value="2">Torre 3</option>
+                    </select>
+                    <span class="arrow">→</span>
+                    <select id="toTower" class="move-select">
+                        <option value="0">Torre 1</option>
+                        <option value="1">Torre 2</option>
+                        <option value="2">Torre 3</option>
+                    </select>
+                    <button id="makeMoveBtn" class="btn btn-primary">Mover</button>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="showSolutionBtn" class="btn btn-info">Ver Solución Óptima</button>
+                <button id="demonstrateBtn" class="btn btn-info">Demostrar Fórmulas</button>
+            </div>
+        </div>
+
+        <!-- Panel de Mensajes -->
+        <div class="message-panel" id="messagePanel">
+            <div class="message-content" id="messageContent">
+                ¡Bienvenido a Torre de Hanoi! Mueve todos los discos a la Torre 2.
+            </div>
+        </div>
+
+        <!-- Panel de Solución -->
+        <div class="solution-panel" id="solutionPanel" style="display: none;">
+            <div class="solution-header">
+                <h4>📋 Solución Óptima</h4>
+                <button id="closeSolutionBtn" class="btn btn-secondary">✕</button>
+            </div>
+            <div class="solution-content" id="solutionContent">
+                <!-- Los pasos se generarán dinámicamente -->
+            </div>
+        </div>
+
+        <!-- Modal de Victoria -->
+        <div class="victory-modal" id="victoryModal" style="display: none;">
+            <div class="victory-content">
+                <h2>🎉 ¡Felicitaciones!</h2>
+                <div class="victory-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Movimientos:</span>
+                        <span class="stat-value" id="finalMoves">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Óptimo:</span>
+                        <span class="stat-value" id="finalOptimal">31</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Eficiencia:</span>
+                        <span class="stat-value" id="finalEfficiency">100%</span>
+                    </div>
+                </div>
+                <div class="victory-formula" id="victoryFormula">
+                    T(5) = 2⁵ - 1 = 31 movimientos
+                </div>
+                <button id="playAgainBtn" class="btn btn-primary">Jugar de Nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../controller/hanoiTower.js"></script>
+    <script>
+        // Variables globales de la interfaz
+        let selectedDisk = null;
+        let selectedTower = null;
+
+        // Inicialización de la interfaz
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeInterface();
+            updateGameDisplay(getGameState());
+            setupEventListeners();
+        });
+
+        function initializeInterface() {
+            // Configurar slider de discos
+            const diskSlider = document.getElementById('diskSlider');
+            const diskCount = document.getElementById('diskCount');
+            
+            diskSlider.addEventListener('input', function() {
+                diskCount.textContent = this.value;
+                initGame(parseInt(this.value));
+            });
+        }
+
+        function setupEventListeners() {
+            // Botón Reset
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                resetGame();
+                showMessage('Juego reiniciado');
+            });
+
+            // Botón Refresh
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                updateGameDisplay(getGameState());
+                showMessage('Pantalla actualizada');
+            });
+
+            // Realizar movimiento
+            document.getElementById('makeMoveBtn').addEventListener('click', function() {
+                const fromTower = parseInt(document.getElementById('fromTower').value);
+                const toTower = parseInt(document.getElementById('toTower').value);
+                const result = moveDisk(fromTower, toTower);
+                
+                if (result.success) {
+                    showMessage(result.message, 'success');
+                    if (result.isComplete) {
+                        showVictoryModal();
+                    }
+                } else {
+                    showMessage(result.message, 'error');
+                }
+            });
+
+            // Ver solución
+            document.getElementById('showSolutionBtn').addEventListener('click', function() {
+                showSolutionPanel();
+            });
+
+            // Demostrar fórmulas
+            document.getElementById('demonstrateBtn').addEventListener('click', function() {
+                demonstrateMath();
+                showMessage('Revisa la consola para ver la demostración matemática', 'info');
+            });
+
+            // Cerrar solución
+            document.getElementById('closeSolutionBtn').addEventListener('click', function() {
+                document.getElementById('solutionPanel').style.display = 'none';
+            });
+
+            // Jugar de nuevo
+            document.getElementById('playAgainBtn').addEventListener('click', function() {
+                document.getElementById('victoryModal').style.display = 'none';
+                resetGame();
+            });
+
+            // Click en discos para selección
+            setupDiskClickHandlers();
+        }
+
+        function setupDiskClickHandlers() {
+            // Añadir event listeners a las torres para selección con click
+            for (let i = 0; i < 3; i++) {
+                const tower = document.getElementById(`tower${i}`);
+                tower.addEventListener('click', function() {
+                    handleTowerClick(i);
+                });
+            }
+        }
+
+        function handleTowerClick(towerIndex) {
+            if (selectedTower === null) {
+                // Seleccionar torre origen
+                const gameState = getGameState();
+                if (gameState.towers[towerIndex].length > 0) {
+                    selectedTower = towerIndex;
+                    highlightTower(towerIndex, true);
+                    showMessage(`Torre ${towerIndex + 1} seleccionada. Haz click en la torre destino.`, 'info');
+                } else {
+                    showMessage('Esta torre está vacía', 'error');
+                }
+            } else {
+                // Realizar movimiento
+                if (selectedTower !== towerIndex) {
+                    const result = moveDisk(selectedTower, towerIndex);
+                    if (result.success) {
+                        showMessage(result.message, 'success');
+                        if (result.isComplete) {
+                            showVictoryModal();
+                        }
+                    } else {
+                        showMessage(result.message, 'error');
+                    }
+                }
+                
+                // Limpiar selección
+                highlightTower(selectedTower, false);
+                selectedTower = null;
+            }
+        }
+
+        function highlightTower(towerIndex, highlight) {
+            const tower = document.getElementById(`tower${towerIndex}`).parentElement;
+            if (highlight) {
+                tower.classList.add('selected');
+            } else {
+                tower.classList.remove('selected');
+            }
+        }
+
+        function updateGameDisplay(gameState) {
+            // Actualizar contadores
+            document.getElementById('currentMoves').textContent = gameState.moveCount;
+            document.getElementById('bestScore').textContent = gameState.bestScore;
+            document.getElementById('closedForm').textContent = gameState.formula;
+            document.getElementById('efficiency').textContent = gameState.efficiency + '%';
+
+            // Determinar y mostrar nivel de dificultad
+            const moves = gameState.bestScore;
+            let difficultyLevel = "Principiante";
+            let difficultyColor = "#48bb78";
+            
+            if (moves > 31) { difficultyLevel = "Intermedio"; difficultyColor = "#4299e1"; }
+            if (moves > 127) { difficultyLevel = "Avanzado"; difficultyColor = "#ed8936"; }
+            if (moves > 511) { difficultyLevel = "Experto"; difficultyColor = "#e53e3e"; }
+            if (moves > 2047) { difficultyLevel = "Maestro"; difficultyColor = "#9f7aea"; }
+            
+            const difficultyElement = document.getElementById('difficultyLevel');
+            difficultyElement.textContent = difficultyLevel;
+            difficultyElement.style.color = difficultyColor;
+            difficultyElement.style.fontWeight = 'bold';
+
+            // Actualizar torres
+            for (let i = 0; i < 3; i++) {
+                updateTowerDisplay(i, gameState.towers[i], gameState.numberOfDisks);
+            }
+
+            // Actualizar slider
+            document.getElementById('diskSlider').value = gameState.numberOfDisks;
+            document.getElementById('diskCount').textContent = gameState.numberOfDisks;
+        }
+
+        function updateTowerDisplay(towerIndex, disks, totalDisks) {
+            const towerElement = document.getElementById(`tower${towerIndex}`);
+            towerElement.innerHTML = '';
+
+            disks.forEach((diskSize, index) => {
+                const disk = document.createElement('div');
+                disk.className = 'disk';
+                disk.classList.add(`disk-${diskSize}`);
+                disk.style.bottom = `${index * 28 + 10}px`;
+                disk.textContent = diskSize;
+                towerElement.appendChild(disk);
+            });
+        }
+
+        function showMessage(message, type = 'info') {
+            const messagePanel = document.getElementById('messagePanel');
+            const messageContent = document.getElementById('messageContent');
+            
+            messageContent.textContent = message;
+            messagePanel.className = `message-panel ${type}`;
+            
+            // Auto-ocultar después de 3 segundos
+            setTimeout(() => {
+                messagePanel.className = 'message-panel';
+            }, 3000);
+        }
+
+        function showSolutionPanel() {
+            const solution = showSolution();
+            const solutionContent = document.getElementById('solutionContent');
+            
+            solutionContent.innerHTML = '';
+            solution.forEach((move, index) => {
+                const step = document.createElement('div');
+                step.className = 'solution-step';
+                step.innerHTML = `<span class="step-number">${index + 1}.</span> ${move.description}`;
+                solutionContent.appendChild(step);
+            });
+            
+            document.getElementById('solutionPanel').style.display = 'block';
+        }
+
+        function showVictoryModal() {
+            const gameState = getGameState();
+            
+            document.getElementById('finalMoves').textContent = gameState.moveCount;
+            document.getElementById('finalOptimal').textContent = gameState.bestScore;
+            document.getElementById('finalEfficiency').textContent = gameState.efficiency + '%';
+            document.getElementById('victoryFormula').textContent = gameState.formula;
+            
+            document.getElementById('victoryModal').style.display = 'flex';
+        }
+
+        // Función global para que el controlador pueda actualizar la interfaz
+        window.updateGameDisplay = updateGameDisplay;
+    </script>
+</body>
+</html>
