@@ -195,12 +195,6 @@
                 showMessage('Juego reiniciado');
             });
 
-            // Botón Refresh
-            document.getElementById('refreshBtn').addEventListener('click', function() {
-                updateGameDisplay(getGameState());
-                showMessage('Pantalla actualizada');
-            });
-
             // Realizar movimiento
             document.getElementById('makeMoveBtn').addEventListener('click', function() {
                 const fromTower = parseInt(document.getElementById('fromTower').value);
