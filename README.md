@@ -76,23 +76,6 @@ T(n) = 2 × T(n-1) + 1
 - ✅ **Estimación de Tiempo** - Predicción de duración basada en movimientos
 - ✅ **Clasificación por Niveles** - Sistema automático de dificultad
 
-## 🚀 Instalación y Uso
-
-### 📋 Requisitos
-- Navegador web moderno (Chrome, Firefox, Safari, Edge)
-- No requiere servidor ni instalación adicional
-
-### 🔧 Instalación
-```bash
-# Clonar o descargar el proyecto
-git clone [URL-del-repositorio]
-
-# Navegar al directorio
-cd "Matematicas Avanzada"
-
-# Abrir en navegador
-# Hacer doble clic en view/index.html
-```
 
 ### 🎮 Uso Básico
 1. **Seleccionar Dificultad:** Usar el slider para elegir número de discos (3-12)
