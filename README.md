@@ -299,11 +299,7 @@ function hanoi(n, origen, destino, auxiliar) {
 **Proyecto:** Matemáticas Avanzadas - Torre de Hanoi  
 **Tema:** Análisis de Recurrencias y Complejidad Algorítmica  
 **Tecnologías:** JavaScript, HTML5, CSS3  
-**Autor:** [Tu Nombre]  
-**Fecha:** Septiembre 2025  
-
-### 📞 Soporte
-Si tienes preguntas sobre la implementación matemática o el código, consulta los comentarios detallados en el archivo `hanoiTower.js` o ejecuta `demonstrateMath()` en la consola del navegador.
+**Autores:** David Viloria, Juana Maria Ospina , Victor Manuel David, Juan Pablo Vasquez  
 
 ---
 
